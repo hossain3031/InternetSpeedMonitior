@@ -116,7 +116,6 @@ class HandlerUpload extends Thread {
 
                 DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
 
-
                 dos.write(buffer, 0, buffer.length);
                 dos.flush();
 

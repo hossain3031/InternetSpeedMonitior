@@ -2,14 +2,11 @@ package com.samsolution.internetspeedmonitior;
 
 import android.graphics.Color;
 import android.location.Location;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +21,7 @@ import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +29,8 @@ import java.util.HashSet;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String TAG = "MainActivity";
 
     static int position = 0;
     static int lastPosition = 0;
@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 new Thread(new Runnable() {
-                    RotateAnimation rotate;
-                    ImageView barImageView = (ImageView) findViewById(R.id.barImageView);
+                    //RotateAnimation rotate;
+                    //ImageView barImageView = (ImageView) findViewById(R.id.barImageView);
                     TextView pingTextView = (TextView) findViewById(R.id.pingTextView);
                     TextView downloadTextView = (TextView) findViewById(R.id.downloadTextView);
                     TextView uploadTextView = (TextView) findViewById(R.id.uploadTextView);
@@ -81,7 +81,9 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                Log.i(TAG, "run: Test Button Clicked 1");
                                 startButton.setText("Selecting best server based on ping...");
+                                Log.i(TAG, "run: Test Button Clicked 2");
                             }
                         });
 
@@ -202,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                         multiDownloadRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00));
                         multiDownloadRenderer.addSeriesRenderer(downloadRenderer);
 
-                        //Init Upload graphic
+                        //Initialization Upload graphic
                         final LinearLayout chartUpload = (LinearLayout) findViewById(R.id.chartUpload);
                         XYSeriesRenderer uploadRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine uploadFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
@@ -238,18 +240,20 @@ public class MainActivity extends AppCompatActivity {
                         final List<Double> pingRateList = new ArrayList<>();
                         final List<Double> downloadRateList = new ArrayList<>();
                         final List<Double> uploadRateList = new ArrayList<>();
-                        Boolean pingTestStarted = false;
-                        Boolean pingTestFinished = false;
-                        Boolean downloadTestStarted = false;
-                        Boolean downloadTestFinished = false;
-                        Boolean uploadTestStarted = false;
-                        Boolean uploadTestFinished = false;
+                        boolean pingTestStarted = false;
+                        boolean pingTestFinished = false;
+                        boolean downloadTestStarted = false;
+                        boolean downloadTestFinished = false;
+                        boolean uploadTestStarted = false;
+                        boolean uploadTestFinished = false;
 
-                        //Init Test
+                        //Initialization Test
                         final PingTest pingTest = new PingTest(info.get(6).replace(":8080", ""), 6);
+                        Log.i(TAG, "run:000 " + pingTest.toString());
                         final HttpDownloadTest downloadTest = new HttpDownloadTest(uploadAddr.replace(uploadAddr.split("/")[uploadAddr.split("/").length - 1], ""));
+                        Log.i(TAG, "run:111 " + downloadTest.toString());
                         final HttpUploadTest uploadTest = new HttpUploadTest(uploadAddr);
-
+                        Log.i(TAG, "run:222 " + uploadTest.toString());
 
                         //Tests
                         while (true) {
@@ -266,7 +270,6 @@ public class MainActivity extends AppCompatActivity {
                                 uploadTestStarted = true;
                             }
 
-
                             //Ping Test
                             if (pingTestFinished) {
                                 //Failure
@@ -277,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                            Log.i(TAG, "run: Success " + dec.format(pingTest.getAvgRtt()) + " ms...");
                                             pingTextView.setText(dec.format(pingTest.getAvgRtt()) + " ms");
                                         }
                                     });
@@ -310,17 +314,16 @@ public class MainActivity extends AppCompatActivity {
 
                                         GraphicalView chartView = ChartFactory.getLineChartView(getBaseContext(), dataset, multiPingRenderer);
                                         chartPing.addView(chartView, 0);
-
                                     }
                                 });
                             }
-
 
                             //Download Test
                             if (pingTestFinished) {
                                 if (downloadTestFinished) {
                                     //Failure
                                     if (downloadTest.getFinalDownloadRate() == 0) {
+                                        Log.i(TAG, "run: Failed" + downloadTest.getInstantDownloadRate());
                                         System.out.println("Download error...");
                                     } else {
                                         //Success
@@ -328,12 +331,14 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void run() {
                                                 downloadTextView.setText(dec.format(downloadTest.getFinalDownloadRate()) + " Mbps");
+                                                //Log.i(TAG, "run: Success " + dec.format(downloadTest.getFinalDownloadRate()) + " Mbps");
                                             }
                                         });
                                     }
                                 } else {
                                     //Calc position
                                     double downloadRate = downloadTest.getInstantDownloadRate();
+                                    Log.i(TAG, "run: upload speed: " + downloadTest.getInstantDownloadRate());  // Continuously Updating the upload speed value
                                     downloadRateList.add(downloadRate);
                                     position = getPositionByRate(downloadRate);
 
@@ -341,14 +346,12 @@ public class MainActivity extends AppCompatActivity {
 
                                         @Override
                                         public void run() {
-                                            rotate = new RotateAnimation(lastPosition, position, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                                            rotate.setInterpolator(new LinearInterpolator());
-                                            rotate.setDuration(100);
-                                            barImageView.startAnimation(rotate);
+                                            //rotate = new RotateAnimation(lastPosition, position, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                                            //rotate.setInterpolator(new LinearInterpolator());
+                                            //rotate.setDuration(100);
+                                            // barImageView.startAnimation(rotate);
                                             downloadTextView.setText(dec.format(downloadTest.getInstantDownloadRate()) + " Mbps");
-
                                         }
-
                                     });
                                     lastPosition = position;
 
@@ -390,6 +393,7 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void run() {
                                                 uploadTextView.setText(dec.format(uploadTest.getFinalUploadRate()) + " Mbps");
+                                                Log.i(TAG, "run: Success " + dec.format(uploadTest.getFinalUploadRate()) + " Mbps uploaded 395 Line");  //Final Status
                                             }
                                         });
                                     }
@@ -403,11 +407,12 @@ public class MainActivity extends AppCompatActivity {
 
                                         @Override
                                         public void run() {
-                                            rotate = new RotateAnimation(lastPosition, position, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                                            rotate.setInterpolator(new LinearInterpolator());
-                                            rotate.setDuration(100);
-                                            barImageView.startAnimation(rotate);
+                                            // rotate = new RotateAnimation(lastPosition, position, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                                            // rotate.setInterpolator(new LinearInterpolator());
+                                            // rotate.setDuration(100);
+                                            // barImageView.startAnimation(rotate);
                                             uploadTextView.setText(dec.format(uploadTest.getInstantUploadRate()) + " Mbps");
+                                            Log.i(TAG, "run: "+ dec.format(uploadTest.getInstantUploadRate()) + " Mbps updating");
                                         }
 
                                     });
@@ -469,7 +474,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
 
-                        //Thread bitiminde button yeniden aktif ediliyor
+                        //Thread bitiminde button
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

@@ -19,22 +19,6 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/colorPrimary2"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/logo" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="150dp"
             android:baselineAligned="false"
             android:orientation="horizontal"
@@ -150,7 +134,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -158,15 +142,15 @@
                 android:layout_alignParentStart="true"
                 android:src="@drawable/main"
                 android:layout_alignParentLeft="true" />
+-->
 
-
-            <ImageView
+           <!-- <ImageView
                 android:id="@+id/barImageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/bar" />
+                android:src="@drawable/bar" />-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
