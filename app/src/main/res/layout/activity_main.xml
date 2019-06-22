@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.egcodes.MainActivity">
+    tools:context="com.samsolution.internetspeedmonitior.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/logo" />
+                android:src="@drawable/logo" />
 
         </LinearLayout>
 
@@ -156,7 +156,8 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
-                app:srcCompat="@drawable/main" />
+                android:src="@drawable/main"
+                android:layout_alignParentLeft="true" />
 
 
             <ImageView
@@ -165,7 +166,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                app:srcCompat="@drawable/bar" />
+                android:src="@drawable/bar" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

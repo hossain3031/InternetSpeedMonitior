@@ -24,7 +24,6 @@ import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
