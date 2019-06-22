@@ -1,5 +1,28 @@
 package com.samsolution.internetspeedmonitior;
 
+    //Hex color code opacity
+       /*100% — FF
+        95% — F2
+        90% — E6
+        85% — D9
+        80% — CC
+        75% — BF
+        70% — B3
+        65% — A6
+        60% — 99
+        55% — 8C
+        50% — 80
+        45% — 73
+        40% — 66
+        35% — 59
+        30% — 4D
+        25% — 40
+        20% — 33
+        15% — 26
+        10% — 1A
+        5% — 0D
+        0% — 00*/
+
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -166,11 +189,11 @@ public class MainActivity extends AppCompatActivity {
                         final LinearLayout chartPing = (LinearLayout) findViewById(R.id.chartPing);
                         XYSeriesRenderer pingRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine pingFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
-                        pingFill.setColor(Color.parseColor("#4d5a6a"));
+                        pingFill.setColor(Color.parseColor("#667CB342"));     // 40% Opacity Green
                         pingRenderer.addFillOutsideLine(pingFill);
                         pingRenderer.setDisplayChartValues(false);
                         pingRenderer.setShowLegendItem(false);
-                        pingRenderer.setColor(Color.parseColor("#4d5a6a"));
+                        pingRenderer.setColor(Color.parseColor("#99FFFF00"));
                         pingRenderer.setLineWidth(5);
                         final XYMultipleSeriesRenderer multiPingRenderer = new XYMultipleSeriesRenderer();
                         multiPingRenderer.setXLabels(0);
@@ -187,10 +210,10 @@ public class MainActivity extends AppCompatActivity {
                         final LinearLayout chartDownload = (LinearLayout) findViewById(R.id.chartDownload);
                         XYSeriesRenderer downloadRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine downloadFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
-                        downloadFill.setColor(Color.parseColor("#4d5a6a"));
+                        downloadFill.setColor(Color.parseColor("#6603A9F4"));   //Blue 40% Opacity
                         downloadRenderer.addFillOutsideLine(downloadFill);
                         downloadRenderer.setDisplayChartValues(false);
-                        downloadRenderer.setColor(Color.parseColor("#4d5a6a"));
+                        downloadRenderer.setColor(Color.parseColor("#99FFFF00"));
                         downloadRenderer.setShowLegendItem(false);
                         downloadRenderer.setLineWidth(5);
                         final XYMultipleSeriesRenderer multiDownloadRenderer = new XYMultipleSeriesRenderer();
@@ -208,10 +231,10 @@ public class MainActivity extends AppCompatActivity {
                         final LinearLayout chartUpload = (LinearLayout) findViewById(R.id.chartUpload);
                         XYSeriesRenderer uploadRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine uploadFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
-                        uploadFill.setColor(Color.parseColor("#4d5a6a"));
+                        uploadFill.setColor(Color.parseColor("#66F44336"));  //Red 40% Opacity
                         uploadRenderer.addFillOutsideLine(uploadFill);
                         uploadRenderer.setDisplayChartValues(false);
-                        uploadRenderer.setColor(Color.parseColor("#4d5a6a"));
+                        uploadRenderer.setColor(Color.parseColor("#99FFFF00"));
                         uploadRenderer.setShowLegendItem(false);
                         uploadRenderer.setLineWidth(5);
                         final XYMultipleSeriesRenderer multiUploadRenderer = new XYMultipleSeriesRenderer();
