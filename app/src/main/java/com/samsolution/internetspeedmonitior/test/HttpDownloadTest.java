@@ -115,5 +115,4 @@ public class HttpDownloadTest extends Thread {
 
         finished = true;
     }
-
 }

@@ -7,4 +7,5 @@
     <color name="buttonBackground">#3af3ff</color>
     <color name="textColor2">#242e3a</color>
     <color name="colorPrimary2">#1d252e</color>
+    <color name="whiteColor">#FFFFFF</color>
 </resources>

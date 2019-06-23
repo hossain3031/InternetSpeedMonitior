@@ -60,5 +60,4 @@ public class PingTest extends Thread {
 
         finished = true;
     }
-
 }

@@ -1,6 +1,6 @@
 package com.samsolution.internetspeedmonitior;
 
-    //Hex color code opacity
+//Hex color code opacity
        /*100% — FF
         95% — F2
         90% — E6
@@ -34,6 +34,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.samsolution.internetspeedmonitior.test.HttpDownloadTest;
 import com.samsolution.internetspeedmonitior.test.HttpUploadTest;
 import com.samsolution.internetspeedmonitior.test.PingTest;
@@ -60,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
     GetSpeedTestHostsHandler getSpeedTestHostsHandler = null;
     HashSet<String> tempBlackList;
 
+    PieChart pieChart;
+    ArrayList<Entry> noOfValue = new ArrayList<Entry>();
+    ArrayList<String> status = new ArrayList<String>();
+    float ping = 0, download = 0, upload = 0;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -68,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         getSpeedTestHostsHandler.start();
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,16 +86,37 @@ public class MainActivity extends AppCompatActivity {
 
         final Button startButton = (Button) findViewById(R.id.startButton);
         final DecimalFormat dec = new DecimalFormat("#.##");
-        startButton.setText("Begin Test");
+        startButton.setText("Test");
 
         tempBlackList = new HashSet<>();
 
         getSpeedTestHostsHandler = new GetSpeedTestHostsHandler();
         getSpeedTestHostsHandler.start();
 
+        //Pie Chart init
+        pieChart = findViewById(R.id.piechart);
+
+        //*********************************************************************//
+        //Value Addition
+        /*noOfValue.add(new Entry(945f, 0));
+        noOfValue.add(new Entry(1040f, 1));
+        noOfValue.add(new Entry(1133f, 2));*/
+
+
+        //*********************************************************************//
+
+
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startButton.setEnabled(false);
+                PieChart piechart = findViewById(R.id.piechart);
+
+                ping = 0;
+                download = 0;
+                upload = 0;
+                status.clear();
+                noOfValue.clear();
+                piechart.clear();
 
                 //Restart test icin eger baglanti koparsa
                 if (getSpeedTestHostsHandler == null) {
@@ -176,12 +208,12 @@ public class MainActivity extends AppCompatActivity {
                             });
                             return;
                         }
-
+                        /*[Distance: %s km]    */
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 startButton.setTextSize(13);
-                                startButton.setText(String.format("Host Location: %s [Distance: %s km]", info.get(2), new DecimalFormat("#.##").format(distance / 1000)));
+                                startButton.setText(String.format("Host Location: %s ", info.get(2), new DecimalFormat("#.##")));
                             }
                         });
 
@@ -189,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
                         final LinearLayout chartPing = (LinearLayout) findViewById(R.id.chartPing);
                         XYSeriesRenderer pingRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine pingFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
-                        pingFill.setColor(Color.parseColor("#667CB342"));     // 40% Opacity Green
+                        pingFill.setColor(Color.parseColor("#667CB342"));     // 40 opacity Green
                         pingRenderer.addFillOutsideLine(pingFill);
                         pingRenderer.setDisplayChartValues(false);
                         pingRenderer.setShowLegendItem(false);
@@ -210,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                         final LinearLayout chartDownload = (LinearLayout) findViewById(R.id.chartDownload);
                         XYSeriesRenderer downloadRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine downloadFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
-                        downloadFill.setColor(Color.parseColor("#6603A9F4"));   //Blue 40% Opacity
+                        downloadFill.setColor(Color.parseColor("#6603A9F4"));   //Blue 40 % Opacity
                         downloadRenderer.addFillOutsideLine(downloadFill);
                         downloadRenderer.setDisplayChartValues(false);
                         downloadRenderer.setColor(Color.parseColor("#99FFFF00"));
@@ -305,6 +337,9 @@ public class MainActivity extends AppCompatActivity {
                                         public void run() {
                                             Log.i(TAG, "run: Success " + dec.format(pingTest.getAvgRtt()) + " ms...");
                                             pingTextView.setText(dec.format(pingTest.getAvgRtt()) + " ms");
+                                            ping = Float.parseFloat(dec.format(pingTest.getAvgRtt()));
+
+
                                         }
                                     });
                                 }
@@ -355,6 +390,7 @@ public class MainActivity extends AppCompatActivity {
                                             public void run() {
                                                 downloadTextView.setText(dec.format(downloadTest.getFinalDownloadRate()) + " Mbps");
                                                 //Log.i(TAG, "run: Success " + dec.format(downloadTest.getFinalDownloadRate()) + " Mbps");
+
                                             }
                                         });
                                     }
@@ -364,6 +400,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.i(TAG, "run: upload speed: " + downloadTest.getInstantDownloadRate());  // Continuously Updating the upload speed value
                                     downloadRateList.add(downloadRate);
                                     position = getPositionByRate(downloadRate);
+                                    download = Float.parseFloat(dec.format(downloadTest.getFinalDownloadRate()));
 
                                     runOnUiThread(new Runnable() {
 
@@ -374,9 +411,13 @@ public class MainActivity extends AppCompatActivity {
                                             //rotate.setDuration(100);
                                             // barImageView.startAnimation(rotate);
                                             downloadTextView.setText(dec.format(downloadTest.getInstantDownloadRate()) + " Mbps");
+                                            Log.i(TAG, "run: download position " + dec.format(downloadTest.getInstantDownloadRate()) + " Mbps Final");
+                                            /*float pingValue = Float.parseFloat(dec.format(uploadTest.getInstantUploadRate()));
+                                            noOfValue.add(new Entry(pingValue, 1));*/
                                         }
                                     });
                                     lastPosition = position;
+                                    Log.i(TAG, "run: download last position " + dec.format(downloadTest.getInstantDownloadRate()) + " Mbps last Final");
 
                                     //Update chart
                                     runOnUiThread(new Runnable() {
@@ -403,7 +444,6 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
 
-
                             //Upload Test
                             if (downloadTestFinished) {
                                 if (uploadTestFinished) {
@@ -416,7 +456,7 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void run() {
                                                 uploadTextView.setText(dec.format(uploadTest.getFinalUploadRate()) + " Mbps");
-                                                Log.i(TAG, "run: Success " + dec.format(uploadTest.getFinalUploadRate()) + " Mbps uploaded 395 Line");  //Final Status
+                                                //Log.i(TAG, "run: Success " + dec.format(uploadTest.getFinalUploadRate()) + " Mbps uploaded 395 Line");  //Final Status
                                             }
                                         });
                                     }
@@ -435,7 +475,8 @@ public class MainActivity extends AppCompatActivity {
                                             // rotate.setDuration(100);
                                             // barImageView.startAnimation(rotate);
                                             uploadTextView.setText(dec.format(uploadTest.getInstantUploadRate()) + " Mbps");
-                                            Log.i(TAG, "run: "+ dec.format(uploadTest.getInstantUploadRate()) + " Mbps updating");
+                                            Log.i(TAG, "run: " + dec.format(uploadTest.getInstantUploadRate()) + " Mbps updating");
+                                            upload = Float.parseFloat(dec.format(uploadTest.getInstantUploadRate()));
                                         }
 
                                     });
@@ -469,6 +510,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
 
+
                             //Test bitti
                             if (pingTestFinished && downloadTestFinished && uploadTest.isFinished()) {
                                 break;
@@ -501,17 +543,33 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                noOfValue.add(new Entry(ping, 0));
+                                noOfValue.add(new Entry(download, 1));
+                                noOfValue.add(new Entry(upload, 2));
+
+                                PieDataSet dataSet = new PieDataSet(noOfValue, "Internt Score");
+                                dataSet.setValueTextColor(Color.WHITE);
+
+                                status.add("");
+                                status.add("");
+                                status.add("");
+
+                                PieData data = new PieData(status, dataSet);
+                                data.setValueTextColor(Color.WHITE);
+                                pieChart.setData(data);
+                                dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                                pieChart.animateXY(3000, 3000);
+
                                 startButton.setEnabled(true);
                                 startButton.setTextSize(16);
-                                startButton.setText("Restart Test");
+                                startButton.setText("Test Again");
                             }
                         });
-
-
                     }
                 }).start();
             }
         });
+
     }
 
 
